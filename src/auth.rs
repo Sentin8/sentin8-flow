@@ -83,7 +83,10 @@ pub async fn verify_cert_or_token(
         ));
     };
     if !rec.enabled {
-        return Err((StatusCode::UNAUTHORIZED, format!("workload '{workload}' is disabled")));
+        return Err((
+            StatusCode::UNAUTHORIZED,
+            format!("workload '{workload}' is disabled"),
+        ));
     }
     let now = chrono::Utc::now().timestamp();
     // Synthetic request-scoped claims: the identity is the certificate

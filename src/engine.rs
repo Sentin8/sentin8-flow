@@ -5,7 +5,6 @@
 
 //! Step execution engine — sequential loop, state machine, branching.
 
-
 use sentin8_flow_sdk::contracts::WorkflowState;
 use uuid::Uuid;
 
@@ -280,13 +279,7 @@ impl Engine {
             step_config: step.config.clone(),
         };
         let ended = chrono::Utc::now().to_rfc3339();
-        match proxy_back::proxy_back(
-            &self.http,
-            &profile,
-            req,
-        )
-        .await
-        {
+        match proxy_back::proxy_back(&self.http, &profile, req).await {
             Ok(pb) => StepOutcome::Proceed(proxy_back::proxy_back_to_result(
                 pb, &step.name, &step.kind, &started, &ended,
             )),

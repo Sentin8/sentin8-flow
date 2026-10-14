@@ -140,10 +140,7 @@ pub struct ListQuery {
 /// query parameter wins; otherwise the token's env claim; a user token
 /// without an env claim resolves to the system env (platform default —
 /// `create_workflow`'s existing behavior, now uniform across the surface).
-fn resolve_target_env(
-    target_env_id: Option<&str>,
-    a: &sentin8::auth::client::AuthContext,
-) -> Uuid {
+fn resolve_target_env(target_env_id: Option<&str>, a: &sentin8::auth::client::AuthContext) -> Uuid {
     target_env_id
         .and_then(|s| uuid::Uuid::parse_str(s).ok())
         .unwrap_or_else(|| a.env_id())
@@ -414,7 +411,10 @@ pub async fn cancel_workflow(
     ) {
         return Err((
             StatusCode::CONFLICT,
-            format!("workflow {} is already terminal ({:?})", record.id, record.state),
+            format!(
+                "workflow {} is already terminal ({:?})",
+                record.id, record.state
+            ),
         ));
     }
     let record = store::update_workflow(

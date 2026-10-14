@@ -96,7 +96,7 @@ pub async fn build_state(
         );
         sentin8::middleware::mtls::build_mtls_client(&mtls)
             .map(sentin8::middleware::http_client::Sentin8HttpClient::from_client)
-            .map_err(|e| sentin8::auth::m2m::M2mError::Cert(e))
+            .map_err(sentin8::auth::m2m::M2mError::Cert)
     })
     .map_err(|e| {
         tracing::warn!(error = %e, "flow: proxy-back transport build failed (proxy-back will fail until next boot)");
@@ -128,14 +128,17 @@ pub async fn build_state(
     // (sys's delegation presents the `sys-flow` certificate; scopes ride
     // the map, not a token). Unavailable at boot → fail-closed until
     // the next boot (same posture as bus).
-    let workload_registry =
-        match sentin8::auth::workload_registry::WorkloadMap::boot_load("sentin8:flow").await {
-            Ok(map) => map,
-            Err(e) => {
-                tracing::warn!(error = %e, "flow: workload registry map unavailable at boot — certificate-workload calls fail-closed until next boot");
-                sentin8::auth::workload_registry::WorkloadMap::boot_load_empty("sentin8:flow")
-            }
-        };
+    let workload_registry = match sentin8::auth::workload_registry::WorkloadMap::boot_load(
+        "sentin8:flow",
+    )
+    .await
+    {
+        Ok(map) => map,
+        Err(e) => {
+            tracing::warn!(error = %e, "flow: workload registry map unavailable at boot — certificate-workload calls fail-closed until next boot");
+            sentin8::auth::workload_registry::WorkloadMap::boot_load_empty("sentin8:flow")
+        }
+    };
 
     let state = AppState {
         config: Arc::new(config.clone()),

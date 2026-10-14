@@ -9,7 +9,6 @@
 
 #![deny(missing_docs)]
 
-
 use sentin8_flow_contracts::WorkflowRecord;
 use sentin8_middleware::http_client::Sentin8HttpClient;
 use thiserror::Error;
@@ -68,8 +67,7 @@ impl FlowClient {
         cert_path: &str,
         key_path: &str,
     ) -> Result<Self, FlowError> {
-        let mtls =
-            sentin8_middleware::mtls::MtlsConfig::new(ca_cert_path, cert_path, key_path);
+        let mtls = sentin8_middleware::mtls::MtlsConfig::new(ca_cert_path, cert_path, key_path);
         let http = sentin8_middleware::mtls::build_mtls_client(&mtls)
             .map(Sentin8HttpClient::from_client)
             .map_err(|e| FlowError::Http(e.to_string()))?;
@@ -93,10 +91,7 @@ impl FlowClient {
     /// Wrap a pre-built cert-presenting transport (— for
     /// callers that hold a shared per-process transport (sys's delegation
     /// client builds per call against one boot-installed transport).
-    pub fn from_transport(
-        base_url: impl Into<String>,
-        http: Sentin8HttpClient,
-    ) -> Self {
+    pub fn from_transport(base_url: impl Into<String>, http: Sentin8HttpClient) -> Self {
         Self {
             base_url: base_url.into().trim_end_matches('/').to_string(),
             http,
