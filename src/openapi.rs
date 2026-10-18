@@ -17,6 +17,21 @@ use crate::types;
 #[derive(OpenApi)]
 #[openapi(
     paths(
+        sentin8::shell::policy_check_relation,
+        sentin8::shell::policy_delete_attribute,
+        sentin8::shell::policy_delete_relation,
+        sentin8::shell::policy_delete_set,
+        sentin8::shell::policy_get_set,
+        sentin8::shell::policy_list_attributes,
+        sentin8::shell::policy_list_relations,
+        sentin8::shell::policy_list_sets,
+        sentin8::shell::policy_mode_disable,
+        sentin8::shell::policy_mode_enforce,
+        sentin8::shell::policy_mode_shadow,
+        sentin8::shell::policy_put_attribute,
+        sentin8::shell::policy_put_relation,
+        sentin8::shell::policy_put_set,
+        sentin8::shell::policy_test_set,
         handlers::create_workflow,
         handlers::list_workflows,
         handlers::get_workflow,
@@ -25,9 +40,16 @@ use crate::types;
         handlers::cancel_workflow,
         handlers::resume_workflow,
         handlers::register_handler,
+        handlers::health,
+        handlers::internal_async_callback,
+        handlers::internal_schedule_run,
+        crate::admin_ui::get_admin_ui,
+        crate::admin_ui::get_admin_data,
     ),
     components(schemas(
         handlers::ListQuery,
+        handlers::AsyncCallbackRequest,
+        crate::admin_ui::TargetEnvQuery,
         types::CreateWorkflowRequest,
         types::RepairWorkflowRequest,
         types::ResumeWorkflowRequest,
@@ -41,7 +63,7 @@ use crate::types;
     )),
     security(),
     tags(
+        (name = "policy", description = "Shield policy administration (shared surface)"),
         (name = "flow", description = "Sentin8:Flow admin API — workflow CRUD, retry, repair, resume"),
     ),
-)]
-pub struct FlowOpenApi;
+)]pub struct FlowOpenApi;
