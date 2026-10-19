@@ -5,6 +5,7 @@
 
 //! Flow HTTP handlers - workflow CRUD, retry, repair, resume, handler registration.
 
+use sentin8::middleware::health::LiveHealth;
 use std::sync::Arc;
 
 use axum::{
@@ -571,20 +572,38 @@ pub async fn register_handler(
 
 /// `POST /v1/internal/schedules/run` - Cron calls this to resume due scheduled workflows.
 /// Handle internal schedule run.
+
+// ── Typed proxy-back replies (OAPEC-9) ──────────────────────────────────
+
+/// The `POST /v1/internal/schedules/run` reply.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]
+pub struct ScheduleRunResponse {
+    /// The due workflows resumed in this pass.
+    pub resumed: usize,
+}
+
+/// The `POST /v1/internal/callbacks/async` reply.
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]
+pub struct AsyncCallbackResponse {
+    /// `true` when the waiting step advanced.
+    pub resumed: bool,
+}
+
 #[utoipa::path(
     post,
     path = "/v1/internal/schedules/run",
     responses(
-        (status = 200, description = "Due scheduled workflows resumed (count returned)", body = serde_json::Value),
+        (status = 200, description = "Due scheduled workflows resumed (count returned)", body = ScheduleRunResponse),
         (status = 401, description = "Caller authentication failed (cert identity or bearer)"),
     ),
     security(("sentin8:flow:write" = [])),
     tag = "internal",
 )]
+/// Resume the due scheduled workflows (cron proxy-back).
 pub async fn internal_schedule_run(
     State(state): State<AppState>,
     headers: HeaderMap,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+) -> Result<Json<ScheduleRunResponse>, (StatusCode, String)> {
     let _a = auth::verify_cert_or_token(&state.workload_registry, &state.config, &headers).await?;
     // Find waiting workflows with scheduled_at <= now.
     let rows: Vec<(Uuid, Uuid)> = sqlx::query_as(
@@ -631,7 +650,7 @@ pub async fn internal_schedule_run(
             }
         });
     }
-    Ok(Json(serde_json::json!({ "resumed": count })))
+    Ok(Json(ScheduleRunResponse { resumed: count }))
 }
 
 // ── Internal: async callback ────────────────────────────────────────────
@@ -658,7 +677,7 @@ pub struct AsyncCallbackRequest {
     path = "/v1/internal/callbacks/async",
     request_body = AsyncCallbackRequest,
     responses(
-        (status = 200, description = "Workflow resumed (waiting step advanced with the callback status/output)", body = serde_json::Value),
+        (status = 200, description = "Workflow resumed (waiting step advanced with the callback status/output)", body = AsyncCallbackResponse),
         (status = 404, description = "Unknown workflow"),
         (status = 409, description = "Workflow is not in a waiting state"),
         (status = 401, description = "Caller authentication failed (cert identity or bearer)"),
@@ -670,7 +689,7 @@ pub async fn internal_async_callback(
     State(state): State<AppState>,
     headers: HeaderMap,
     Json(req): Json<AsyncCallbackRequest>,
-) -> Result<Json<serde_json::Value>, (StatusCode, String)> {
+) -> Result<Json<AsyncCallbackResponse>, (StatusCode, String)> {
     let a = auth::verify_cert_or_token(&state.workload_registry, &state.config, &headers).await?;
     let env_id = a.env_id();
     let record = store::get_workflow(&state.pool, env_id, req.workflow_id)
@@ -709,7 +728,7 @@ pub async fn internal_async_callback(
             Err(e) => tracing::error!(error = %e, "failed to load logic for async callback resume"),
         }
     });
-    Ok(Json(serde_json::json!({ "resumed": true })))
+    Ok(Json(AsyncCallbackResponse { resumed: true }))
 }
 
 // ── Health ───────────────────────────────────────────────────────────────
@@ -719,15 +738,17 @@ pub async fn internal_async_callback(
     get,
     path = "/v1/health",
     responses(
-        (status = 200, description = "Liveness (version, build, active connections)", body = serde_json::Value),
+        (status = 200, description = "Liveness (version, build, active connections)", body = sentin8::middleware::health::LiveHealth),
     ),
     security(),
     tag = "meta",
 )]
-pub async fn health() -> Json<serde_json::Value> {
-    let mut payload = serde_json::json!({ "status": "ok", "service": "flow", "version": sentin8::build_info::id(), "build": sentin8::build_info::build_hash() });
-    if let Some(n) = sentin8::middleware::traffic_counter::process_active_connections() {
-        payload["active_connections"] = serde_json::json!(n);
-    }
-    Json(payload)
+pub async fn health() -> Json<LiveHealth> {
+    Json(LiveHealth {
+        status: "ok".to_string(),
+        service: Some("flow".to_string()),
+        version: Some(sentin8::build_info::id()),
+        build: Some(sentin8::build_info::build_hash().to_string()),
+        active_connections: sentin8::middleware::traffic_counter::process_active_connections().map(|n| n as i64),
+    })
 }
