@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Sentin8 Flow — library re-exports for integration tests.
+//! Sentin8 Flow - library re-exports for integration tests.
 
 #![deny(missing_docs)]
 
@@ -17,11 +17,11 @@ pub mod config;
 pub mod engine;
 /// Sentin8:Func host-function integration for steps.
 pub mod func_integration;
-/// HTTP handlers — workflow CRUD, lifecycle verbs.
+/// HTTP handlers - workflow CRUD, lifecycle verbs.
 pub mod handlers;
 /// OpenAPI spec assembly.
 pub mod openapi;
-/// Shield (Sentin8:Policy) integration — shared bridge re-exports.
+/// Shield (Sentin8:Policy) integration - shared bridge re-exports.
 pub mod policy;
 /// Proxy-back callback execution for domain steps.
 pub mod proxy_back;

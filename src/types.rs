@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Flow domain types — server-side types used by the engine, store, and handlers.
+//! Flow domain types - server-side types used by the engine, store, and handlers.
 
 use std::collections::HashMap;
 
@@ -138,7 +138,7 @@ pub struct CallbackConfig {
     pub host_functions: HashMap<String, String>,
 }
 
-/// StepHandlerProfile — how to proxy-call a domain's step handlers.
+/// StepHandlerProfile - how to proxy-call a domain's step handlers.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// The stephandlerprofile type.
 pub struct StepHandlerProfile {
@@ -181,11 +181,11 @@ pub struct StepContext {
     /// The step index.
     pub step_index: usize,
     /// The parent workflow's correlation id (inherited by child spawns
-    /// from `InitiateInstructionStep` — flow DESIGN §6 create idempotency).
+    /// from `InitiateInstructionStep` - flow DESIGN §6 create idempotency).
     pub correlation_id: Option<String>,
 }
 
-/// CreateWorkflowRequest — body of `POST /v1/workflows`.
+/// CreateWorkflowRequest - body of `POST /v1/workflows`.
 /// The `logic`, `input`, and `callback_config` fields accept either a JSON
 /// object or a JSON string (from RFW forms which send text fields as strings).
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
@@ -247,7 +247,7 @@ where
     }
 }
 
-/// RepairWorkflowRequest — body of `POST /v1/workflows/{id}/repair`.
+/// RepairWorkflowRequest - body of `POST /v1/workflows/{id}/repair`.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// Request body for repairworkflow.
 pub struct RepairWorkflowRequest {
@@ -260,7 +260,7 @@ pub struct RepairWorkflowRequest {
     pub input: Option<serde_json::Value>,
 }
 
-/// ResumeWorkflowRequest — body of `POST /v1/workflows/{id}/resume`.
+/// ResumeWorkflowRequest - body of `POST /v1/workflows/{id}/resume`.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// Request body for resumeworkflow.
 pub struct ResumeWorkflowRequest {
@@ -270,7 +270,7 @@ pub struct ResumeWorkflowRequest {
     pub decision: Option<serde_json::Value>,
 }
 
-/// WorkflowRecord — the persisted workflow state.
+/// WorkflowRecord - the persisted workflow state.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// Persisted workflow record.
 pub struct WorkflowRecord {
@@ -311,7 +311,7 @@ pub struct WorkflowRecord {
     pub completed_at: Option<chrono::DateTime<chrono::Utc>>,
 }
 
-/// RegisterHandlerRequest — body of `POST /v1/handlers/register`.
+/// RegisterHandlerRequest - body of `POST /v1/handlers/register`.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// Request body for registerhandler.
 pub struct RegisterHandlerRequest {
@@ -327,8 +327,8 @@ pub struct RegisterHandlerRequest {
     pub internal_path: String,
 }
 
-/// ProxyBackRequest — body sent to the registering service's internal API.
-/// `env_id` is the WORKFLOW's tenant — the proxy-back handler MUST set tenant
+/// ProxyBackRequest - body sent to the registering service's internal API.
+/// `env_id` is the WORKFLOW's tenant - the proxy-back handler MUST set tenant
 /// context from it before any domain write (sys design "Proxy-back steps
 /// set tenant context"): the M2M bearer identifies the service (machine
 /// identity), never the tenant, so the envelope is the only tenant carrier.
@@ -351,7 +351,7 @@ pub struct ProxyBackRequest {
     pub step_config: Option<serde_json::Value>,
 }
 
-/// ProxyBackResponse — expected response from the registering service.
+/// ProxyBackResponse - expected response from the registering service.
 #[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 /// Response payload for proxyback.
 pub struct ProxyBackResponse {

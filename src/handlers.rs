@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Flow HTTP handlers — workflow CRUD, retry, repair, resume, handler registration.
+//! Flow HTTP handlers - workflow CRUD, retry, repair, resume, handler registration.
 
 use std::sync::Arc;
 
@@ -38,15 +38,15 @@ pub struct AppState {
     pub engine: Arc<Engine>,
     /// The registry.
     pub registry: HandlerRegistry,
-    /// Shield engine ( — ): additional gate after scope.
+    /// Shield engine ( - ): additional gate after scope.
     /// The policy.
     pub policy: Arc<crate::policy::Engine>,
-    /// auth DESIGN §4.3f: the boot-loaded workload registry map — the
+    /// auth DESIGN §4.3f: the boot-loaded workload registry map - the
     /// authorization record for certificate-only platform-workload
     /// calls (sys's delegation presents the `sys-flow` certificate;
     /// scopes ride the map, not a token).
     pub workload_registry: sentin8::auth::workload_registry::WorkloadMap,
-    /// Shared Sentin8:Policy admin surface ( — one
+    /// Shared Sentin8:Policy admin surface ( - one
     /// implementation for every service; mounted in server::routes).
     /// The admin.
     pub admin: sentin8::shield::admin::SharedAdminState,
@@ -54,7 +54,7 @@ pub struct AppState {
 
 // ── Create workflow ──────────────────────────────────────────────────────
 
-/// `POST /v1/workflows` — create + start workflow.
+/// `POST /v1/workflows` - create + start workflow.
 #[utoipa::path(
     post,
     operation_id = "workflow.create",
@@ -130,15 +130,15 @@ pub struct ListQuery {
     /// correlation identifier.
     pub correlation_id: Option<String>,
     #[serde(default)]
-    /// Target environment — same contract as TargetEnvQuery (query param
+    /// Target environment - same contract as TargetEnvQuery (query param
     /// wins over the token's env; user tokens may carry no env at all,
-    /// which then resolves to the system env — the platform default).
+    /// which then resolves to the system env - the platform default).
     pub target_env_id: Option<String>,
 }
 
 /// Shared env resolution for workflow handlers: an explicit `target_env_id`
 /// query parameter wins; otherwise the token's env claim; a user token
-/// without an env claim resolves to the system env (platform default —
+/// without an env claim resolves to the system env (platform default -
 /// `create_workflow`'s existing behavior, now uniform across the surface).
 fn resolve_target_env(target_env_id: Option<&str>, a: &sentin8::auth::client::AuthContext) -> Uuid {
     target_env_id
@@ -225,7 +225,7 @@ pub async fn get_workflow(
 
 // ── Retry ─────────────────────────────────────────────────────────────────
 
-/// `POST /v1/workflows/{id}/retry` — retry a failed workflow from the failed step.
+/// `POST /v1/workflows/{id}/retry` - retry a failed workflow from the failed step.
 #[utoipa::path(
     post,
     operation_id = "workflow.retry",
@@ -283,7 +283,7 @@ pub async fn retry_workflow(
         &state.pool, env_id, "sentin8:flow:workflow:retried",
         &serde_json::json!({ "workflow_id": record.id, "logic_id": record.logic_id, "current_step": record.current_step }),
     ).await;
-    // Re-spawn the engine from the persisted logic — the workflow resumes
+    // Re-spawn the engine from the persisted logic - the workflow resumes
     // from current_step.
     let engine = state.engine.clone();
     let env = env_id;
@@ -303,7 +303,7 @@ pub async fn retry_workflow(
 
 // ── Repair ────────────────────────────────────────────────────────────────
 
-/// `POST /v1/workflows/{id}/repair` — rewind to a step and reprocess.
+/// `POST /v1/workflows/{id}/repair` - rewind to a step and reprocess.
 #[utoipa::path(
     post,
     operation_id = "workflow.repair",
@@ -402,7 +402,7 @@ pub async fn cancel_workflow(
         .await
         .map_err(|e| (StatusCode::NOT_FOUND, e.to_string()))?;
     // Terminal-state guard (flow DESIGN transitions): cancel on a
-    // completed/failed/already-cancelled workflow is a 409 — the engine
+    // completed/failed/already-cancelled workflow is a 409 - the engine
     // may complete a run between the caller's create/read and this
     // cancel (never surface the write-skim as a 500).
     if matches!(
@@ -448,7 +448,7 @@ pub async fn cancel_workflow(
 
 // ── Resume ────────────────────────────────────────────────────────────────
 
-/// `POST /v1/workflows/{id}/resume` — resume from waiting state (manual decision, async HTTP, schedule).
+/// `POST /v1/workflows/{id}/resume` - resume from waiting state (manual decision, async HTTP, schedule).
 #[utoipa::path(
     post,
     operation_id = "workflow.resume",
@@ -510,7 +510,7 @@ pub async fn resume_workflow(
     )
     .await
     .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
-    // Re-spawn the engine from the persisted logic — the workflow resumes
+    // Re-spawn the engine from the persisted logic - the workflow resumes
     // from current_step with the decision applied to the last step result.
     let engine = state.engine.clone();
     let env = env_id;
@@ -530,7 +530,7 @@ pub async fn resume_workflow(
 
 // ── Handler registration ─────────────────────────────────────────────────
 
-/// `POST /v1/handlers/register` — register a domain's step handler profile.
+/// `POST /v1/handlers/register` - register a domain's step handler profile.
 #[utoipa::path(
     post,
     path = "/v1/handlers/register",
@@ -563,13 +563,13 @@ pub async fn register_handler(
         internal_path: req.internal_path,
     };
     state.registry.register(profile).await;
-    // step_kinds list is informational — the registry maps by domain, not per-kind.
+    // step_kinds list is informational - the registry maps by domain, not per-kind.
     Ok(StatusCode::NO_CONTENT)
 }
 
 // ── Internal: schedule run (Cron proxy-back) ────────────────────────────
 
-/// `POST /v1/internal/schedules/run` — Cron calls this to resume due scheduled workflows.
+/// `POST /v1/internal/schedules/run` - Cron calls this to resume due scheduled workflows.
 /// Handle internal schedule run.
 #[utoipa::path(
     post,
@@ -651,7 +651,7 @@ pub struct AsyncCallbackRequest {
     pub error: Option<String>,
 }
 
-/// `POST /v1/internal/callbacks/async` — external callback to resume a waiting workflow.
+/// `POST /v1/internal/callbacks/async` - external callback to resume a waiting workflow.
 /// Handle internal async callback.
 #[utoipa::path(
     post,

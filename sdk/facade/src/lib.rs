@@ -1,4 +1,4 @@
-//! sentin8-flow-sdk — per-service SDK mini-facade (SDD §3.1).
+//! sentin8-flow-sdk - per-service SDK mini-facade (SDD §3.1).
 //!
 //! Re-exports the service's client + contracts crates. No logic, no
 //! features (SDD-4b). Consumers import as `use sentin8_flow_sdk::{client|contracts}::…`.
@@ -6,12 +6,12 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
-/// flow-client — HTTP client (re-export).
+/// flow-client - HTTP client (re-export).
 pub mod client {
     pub use sentin8_flow_client::*;
 }
 
-/// flow-contracts — wire types + OpenAPI spec (re-export).
+/// flow-contracts - wire types + OpenAPI spec (re-export).
 pub mod contracts {
     pub use sentin8_flow_contracts::*;
 }

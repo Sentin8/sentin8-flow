@@ -1,4 +1,4 @@
-# Design Doc: Sentin8:Flow — Durable Workflow Engine
+# Design Doc: Sentin8:Flow - Durable Workflow Engine
 
 ## 1. Summary
 
@@ -20,7 +20,7 @@ decision that unblocked them.
   templates; Flow executes them uniformly (state machine, retries,
   audit) instead of each service embedding its own.
 - **Human-in-the-loop is a first-class step.** Approvals park a
-  workflow (`Waiting`) and `resume` injects the decision — approval
+  workflow (`Waiting`) and `resume` injects the decision - approval
   applies the approver's authorization at execution time.
 - **Event-triggered and API-triggered.** Workflows start from domain
   events (declarative `event_triggers` registration) or explicit API
@@ -42,34 +42,34 @@ stateDiagram-v2
     Cancelled --> [*]
 ```
 
-- **Storage** — `flow.workflows` (RLS env-scoped): id, env, domain,
+- **Storage** - `flow.workflows` (RLS env-scoped): id, env, domain,
   logic id, state, input/output, current step, step results, callback
   config, timestamps.
-- **Execution** — the engine advances one step at a time: a
+- **Execution** - the engine advances one step at a time: a
   `BasicStep`/`HttpStep` executes built-in or proxies back to the
   owning service; a `ManualDecisionStep` parks in `Waiting`.
-- **Proxy-back** — steps call the owning service's internal API with
+- **Proxy-back** - steps call the owning service's internal API with
   the DCR-issued cert-bound token (per-tenant M2M credentials instead
   of the static profile token where configured); the callback resolves
   tenant context from the workflow record before any domain write.
-- **Host functions** — steps can delegate logic to Sentin8:Func WASM
+- **Host functions** - steps can delegate logic to Sentin8:Func WASM
   modules (import name → proxy-back path mapping).
-- **Lifecycle verbs** — `retry` (from failure), `repair`
+- **Lifecycle verbs** - `retry` (from failure), `repair`
   (rewind to a step with replacement input), `cancel`, `resume` (with
-  decision payload) — all audited.
+  decision payload) - all audited.
 
 ## 4. Key Traits and Data Structures
 
-- **`LogicVersion` / `StepDef`** — the template: named steps,
+- **`LogicVersion` / `StepDef`** - the template: named steps,
   `next_step` chaining, executor kind + config, `on_error` jump,
   versioned and pinned per instance.
-- **`WorkflowRecord`** — the persisted state machine (mirrors the
+- **`WorkflowRecord`** - the persisted state machine (mirrors the
   shared flow-contracts crate).
-- **`CreateWorkflowRequest`** — domain, logic version, input, callback
+- **`CreateWorkflowRequest`** - domain, logic version, input, callback
   config, optional correlation id.
-- **`StepOutcome`** — executor result: `Proceed` (continue) or
+- **`StepOutcome`** - executor result: `Proceed` (continue) or
   `Waiting` (pause, optional deadline).
-- **Step-handler profiles** — env-var-configured profiles mapping
+- **Step-handler profiles** - env-var-configured profiles mapping
   domain → internal path + auth material, loaded at boot.
 
 ## 5. Rationale, Trade-offs, and Alternatives
@@ -86,7 +86,7 @@ stateDiagram-v2
   service; Flow never accesses other services' tables. The callback
   re-derives tenant context from the record (never trusts the caller).
 - **Repair as rewind-to-step.** Patch one step's input and re-run from
-  there — full restart would repeat side effects. `rewind_to` +
+  there - full restart would repeat side effects. `rewind_to` +
   replacement input is the minimal repair primitive.
 - **Resume carries the decision.** Waiting steps park on an external
   decision; injecting it as input re-enters the state machine
@@ -95,7 +95,7 @@ stateDiagram-v2
   envelope's idempotency key; step proxy-backs carry a step-level key
   so at-least-once delivery from retries is effectively-once.
 - **Manual decision is its own executor.** Human approval is not
-  "another HTTP call" — it has different semantics (no timeout by
+  "another HTTP call" - it has different semantics (no timeout by
   default, audit, approver's authorization). A generic pause mechanism
   would hide that.
 - **Rejected: embedded workflow libraries.** Same durability and
@@ -112,7 +112,7 @@ stateDiagram-v2
     crash mid-step replays the step (idempotency key dedupes side
     effects).
   - Tenant context for proxy-back is derived from the workflow record
-    (env_id) and set transaction-local on the callback connection —
+    (env_id) and set transaction-local on the callback connection -
     never inherited from the HTTP caller.
   - Cancelled/failed workflows keep their step results (audit).
   - `Waiting` without a deadline parks indefinitely (manual decision);

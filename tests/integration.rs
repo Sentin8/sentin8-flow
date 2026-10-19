@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-// Flow unit tests — Story 8.1.21 / 8.6.8
+// Flow unit tests - Story 8.1.21 / 8.6.8
 // Covers: type-level shape checks, handler registry keying, built-in executor
 // behavior, proxy-back response mapping, state machine wire stability.
 // No backing services required.
@@ -188,7 +188,7 @@ fn domain_steps_are_not_generic() {
     assert!(!steps_generic::is_generic("UnknownStep"));
 }
 
-// ── Built-in executors (8.1.5–8.1.11) ───────────────────────────────────
+// ── Built-in executors (8.1.5-8.1.11) ───────────────────────────────────
 
 #[tokio::test]
 async fn manual_decision_waits() {

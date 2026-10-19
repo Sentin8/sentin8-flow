@@ -209,8 +209,8 @@ pub async fn update_workflow(
 
 /// Insert a workflow lifecycle event into flow's LOCAL outbox (`flow.outbox`)
 /// on its own transaction (flow DESIGN §4 event flow, architecture-principles
-/// §6.7): the row commits outbox-first — atomically isolated from the domain
-/// change — and the shell-spawned relay (shell boot step 8b, LISTEN
+/// §6.7): the row commits outbox-first - atomically isolated from the domain
+/// change - and the shell-spawned relay (shell boot step 8b, LISTEN
 /// `flow_outbox_changed` + 5s safety poll) pushes it to Bus `POST /v1/produce`
 /// (M2M, scope `sentin8:bus:produce`), marking it relayed. Callers are
 /// best-effort (`let _ = …`): a failed emission only drops the event, never

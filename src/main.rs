@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Sentin8 Flow — standalone workflow execution engine.
+//! Sentin8 Flow - standalone workflow execution engine.
 //!
 //! Boot runs on the platform `sentin8-shell` crate: registration flag,
 //! PQ provider, config, capped pool, PG18 check, state binding, OpenAPI

@@ -47,14 +47,14 @@ pub async fn require_any_scope(
 
 /// Certificate-first lifecycle authentication (auth DESIGN §4.3f; group
 /// DESIGN.md §3.1): an enrolled platform workload presents its Acme
-/// client certificate in the TLS handshake — the TLS layer (having
+/// client certificate in the TLS handshake - the TLS layer (having
 /// CA-verified it) injects `X-Sentin8-Client-Cert-Subject/-Thumbprint`
 /// and strips client-supplied copies. The subject resolves through the
 /// boot-loaded registry map to scopes; the certificate IS the identity
-/// (no bearer, no DCR — the retired token model). Bearer tokens remain
+/// (no bearer, no DCR - the retired token model). Bearer tokens remain
 /// the fallback for user/delegated callers.
 ///
-/// Mirrors Bus's combined verifier — the same trust model every
+/// Mirrors Bus's combined verifier - the same trust model every
 /// cert-facing service uses.
 pub async fn verify_cert_or_token(
     registry: &sentin8::auth::workload_registry::WorkloadMap,

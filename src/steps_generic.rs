@@ -20,7 +20,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{StepContext, StepResult};
 
-/// Outcome of a built-in executor — either proceed or pause the workflow.
+/// Outcome of a built-in executor - either proceed or pause the workflow.
 pub enum StepOutcome {
     /// Continue to the next step with the result.
     Proceed(StepResult),
@@ -224,7 +224,7 @@ pub async fn execute_http_async(
     if let Some(b) = cfg.body.as_ref() {
         req = req.json(b);
     }
-    // Fire and forget — workflow waits for callback to /v1/internal/callbacks/async
+    // Fire and forget - workflow waits for callback to /v1/internal/callbacks/async
     let _ = req.send().await;
     StepOutcome::Waiting(
         StepResult::waiting(&sc.current_step, "HTTPAsyncStep", &started, &ended),
@@ -292,7 +292,7 @@ struct WaitStepConfig {
     /// Delay from now, in seconds.
     #[serde(default)]
     delay_seconds: Option<i64>,
-    /// Absolute resume time (RFC 3339) — overrides `delay_seconds`.
+    /// Absolute resume time (RFC 3339) - overrides `delay_seconds`.
     #[serde(default)]
     wait_until: Option<String>,
 }
@@ -324,7 +324,7 @@ pub async fn execute_wait(sc: &StepContext, config: Option<&serde_json::Value>) 
             "WaitStep",
             &started,
             &ended,
-            "missing config — one of delay_seconds or wait_until is required",
+            "missing config - one of delay_seconds or wait_until is required",
         ));
     }
     StepOutcome::Waiting(
@@ -338,7 +338,7 @@ pub async fn execute_wait(sc: &StepContext, config: Option<&serde_json::Value>) 
 #[derive(Debug, Serialize, Deserialize)]
 struct InitiateStepConfig {
     /// The child domain (the owning service's identity, e.g.
-    /// `sentin8:sys`) — the child workflow's proxy-back target. Defaults
+    /// `sentin8:sys`) - the child workflow's proxy-back target. Defaults
     /// to the parent's domain when omitted.
     #[serde(default)]
     domain: Option<String>,
@@ -369,7 +369,7 @@ pub async fn execute_initiate_instruction(
         ));
     };
     // The child inherits the parent's correlation_id (the spawn is part of
-    // the same business transaction — a replayed parent create returns the
+    // the same business transaction - a replayed parent create returns the
     // original pending child instead of spawning a duplicate run; flow
     // DESIGN §6 create idempotency).
     let child = crate::store::insert_workflow(

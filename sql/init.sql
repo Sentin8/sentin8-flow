@@ -3,7 +3,7 @@
 -- SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 -- SPDX-License-Identifier: Apache-2.0
 
--- Sentin8:Flow — generic workflow execution engine.
+-- Sentin8:Flow - generic workflow execution engine.
 
 -- flow.workflows: all workflow records across all services
 CREATE SCHEMA IF NOT EXISTS flow;
@@ -35,7 +35,7 @@ CREATE INDEX IF NOT EXISTS idx_flow_workflows_due ON flow.workflows (scheduled_a
 
 -- Create idempotency (flow DESIGN §6, principles §6.7): a replayed create
 -- with the same (env, logic, correlation) while the workflow is still
--- pending dedupes to the original row — at-least-once producers must not
+-- pending dedupes to the original row - at-least-once producers must not
 -- spawn duplicate runs.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_flow_workflows_idem
     ON flow.workflows (env_id, logic_id, correlation_id)
@@ -138,7 +138,7 @@ CREATE POLICY audit_journal_dml ON flow.audit_journal
     WITH CHECK (sentin8_context_initialized() AND env_id = sentin8_current_env_id());
 
 
--- ── Schema grants (service-owned — the 2026-10-03 ownership pass) ─────
+-- ── Schema grants (service-owned - the 2026-10-03 ownership pass) ─────
 -- This service's own schema: USAGE for its role (platform.sql no longer
 -- seeds per-service USAGE; the service declares it here).
 GRANT USAGE ON SCHEMA flow TO sentin8_flow_service;

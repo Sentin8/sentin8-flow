@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Sentin8:Flow Admin UI handlers — RFW definitions.
+//! Sentin8:Flow Admin UI handlers - RFW definitions.
 //! Served from `GET /v1/admin/ui/{page}`, rendered by Sentin8:Dash at runtime.
 
 use crate::handlers::AppState;
@@ -112,7 +112,7 @@ pub async fn get_admin_ui(
                 row_action_post("Retry", "workflows/{workflow_id}/steps/{id}/retry"),
             ]))
             .build(),
- // ── Policy Studio — shared page
+ // ── Policy Studio - shared page
  // constructors; the guard guarantees `Some` ( dispatch).
         p if sentin8::rfw::policy_page("sentin8:flow", p).is_some() => sentin8::rfw
             ::policy_page("sentin8:flow", p)
@@ -125,7 +125,7 @@ pub async fn get_admin_ui(
     ))
 }
 
-/// `GET /v1/admin/{resource}` — returns a JSON array of admin data rows.
+/// `GET /v1/admin/{resource}` - returns a JSON array of admin data rows.
 /// Fetch admin data.
 #[utoipa::path(
     get,
@@ -171,7 +171,7 @@ pub async fn get_admin_data(
             )
         })?;
     // RLS: `workflows` is FORCE-RLS'd on (context_initialized, env_id) and
-    // set_config(…, true) is transaction-local — the context + queries run
+    // set_config(…, true) is transaction-local - the context + queries run
     // inside one explicit transaction on the same connection (flow DESIGN
     // §6.4). A bare-pool read runs context-less and FORCE-RLS hides every
     // row (UI table rendered "No data." while the row existed).

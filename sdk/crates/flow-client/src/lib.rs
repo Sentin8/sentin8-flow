@@ -25,7 +25,7 @@ pub enum FlowError {
 }
 
 /// Percent-encode a query-parameter value (RFC 3986 unreserved set kept
-/// literal; everything else escaped) — the workspace's shared no-dep
+/// literal; everything else escaped) - the workspace's shared no-dep
 /// encoding convention (BFF `handlers::urlencoding` pattern).
 fn percent_encode_query(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
@@ -42,7 +42,7 @@ fn percent_encode_query(s: &str) -> String {
     out
 }
 
-/// The Flow client — **certificate-presenting** (, auth DESIGN
+/// The Flow client - **certificate-presenting** (, auth DESIGN
 /// §4.3f): every call presents the workload's Acme-issued client
 /// certificate in the TLS handshake; Flow's TLS layer authenticates it.
 /// No bearer token exists on this path. Cheap to clone.
@@ -59,7 +59,7 @@ impl FlowClient {
     ///
     /// # Errors
     /// [`FlowError::Http`] when the mTLS transport cannot be built from
-    /// the identity paths — a missing certificate identity is a
+    /// the identity paths - a missing certificate identity is a
     /// provisioning state, surfaced loud.
     pub fn with_workload_identity(
         base_url: impl Into<String>,
@@ -77,7 +77,7 @@ impl FlowClient {
         })
     }
 
-    /// Plain-HTTP DEV FALLBACK constructor — no TLS identity (Flow
+    /// Plain-HTTP DEV FALLBACK constructor - no TLS identity (Flow
     /// rejects it loudly at the authorization gate). Use ONLY for the
     /// fail-soft boot path when the workload certificate cannot be minted
     /// yet; never for production paths.
@@ -88,7 +88,7 @@ impl FlowClient {
         }
     }
 
-    /// Wrap a pre-built cert-presenting transport (— for
+    /// Wrap a pre-built cert-presenting transport (- for
     /// callers that hold a shared per-process transport (sys's delegation
     /// client builds per call against one boot-installed transport).
     pub fn from_transport(base_url: impl Into<String>, http: Sentin8HttpClient) -> Self {
@@ -98,7 +98,7 @@ impl FlowClient {
         }
     }
 
-    /// Test-only plain-HTTP constructor — talks to a local test server
+    /// Test-only plain-HTTP constructor - talks to a local test server
     /// with no TLS/identity.
     #[cfg(test)]
     fn plain(base_url: impl Into<String>) -> Self {
@@ -108,7 +108,7 @@ impl FlowClient {
         }
     }
 
-    /// `GET /v1/workflows/{id}` — fetch a workflow instance.
+    /// `GET /v1/workflows/{id}` - fetch a workflow instance.
     pub async fn get_workflow(&self, id: &str) -> Result<WorkflowRecord, FlowError> {
         let resp = self
             .http
@@ -124,7 +124,7 @@ impl FlowClient {
             .map_err(|e| FlowError::Decode(e.to_string()))
     }
 
-    /// `POST /v1/workflows` — create + start workflow.
+    /// `POST /v1/workflows` - create + start workflow.
     pub async fn create_workflow(
         &self,
         req: &CreateWorkflowRequest,
@@ -144,12 +144,12 @@ impl FlowClient {
             .map_err(|e| FlowError::Decode(e.to_string()))
     }
 
-    /// `GET /v1/workflows` — list workflows.
+    /// `GET /v1/workflows` - list workflows.
     ///
     /// All filters are optional; `correlation_id` rides the
     /// `idx_flow_workflows_correlation` partial index server-side, so
     /// callers matching a workflow by its correlation (e.g. an
-    /// instruction id) should always pass it instead of list-and-scan —
+    /// instruction id) should always pass it instead of list-and-scan -
     /// the unfiltered list is `ORDER BY created_at DESC LIMIT 100`.
     pub async fn list_workflows(
         &self,
@@ -408,7 +408,7 @@ mod tests {
         assert_eq!(w.logic_id, "statement-regen");
         let raw = handle.await.unwrap();
         assert!(raw.starts_with("POST /v1/workflows HTTP/1.1"), "got: {raw}");
-        // no Authorization header on the platform path — the
+        // no Authorization header on the platform path - the
         // identity rides the TLS handshake (absent in this plain-HTTP test
         // transport).
         assert!(

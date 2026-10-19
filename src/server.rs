@@ -32,9 +32,9 @@ pub async fn build_state(
             .await;
     }
 
-    // — auth DESIGN §4.3f: the shared identity material for the
+    // - auth DESIGN §4.3f: the shared identity material for the
     // `sentin8-flow-proxy-back` workload CERTIFICATE (load-or-mint from
-    // Acme — the certificate IS the identity; no DCR, no token). Both
+    // Acme - the certificate IS the identity; no DCR, no token). Both
     // the proxy-back transport and the WASM-execution Func lane present
     // it; scope-verifying targets authenticate the handshake; the
     // registry map authorizes the scope.
@@ -43,7 +43,7 @@ pub async fn build_state(
 
     // auth DESIGN §4.3f: the WASM-execution lane presents the SAME
     // `sentin8-flow-proxy-back` workload certificate the proxy-back
-    // transport mints — Func's cert-first gate resolves it against the
+    // transport mints - Func's cert-first gate resolves it against the
     // registry map (the static SENTIN8_FUNC_TOKEN dev convention is
     // retired). Boot-retry like every mint consumer (Acme may still be
     // coming up at first birth).
@@ -65,13 +65,13 @@ pub async fn build_state(
                     ) {
                         Ok(c) => break Some(c),
                         Err(e) => {
-                            tracing::debug!(error = %e, "flow: func transport build failed — retrying");
+                            tracing::debug!(error = %e, "flow: func transport build failed - retrying");
                             tokio::time::sleep(std::time::Duration::from_secs(2)).await;
                         }
                     }
                 }
                 Err(e) => {
-                    tracing::debug!(error = %e, "flow: func certificate not ready yet — retrying");
+                    tracing::debug!(error = %e, "flow: func certificate not ready yet - retrying");
                     tokio::time::sleep(std::time::Duration::from_secs(2)).await;
                 }
             }
@@ -80,7 +80,7 @@ pub async fn build_state(
         None
     };
 
-    // — auth DESIGN §4.3f: build the cert-presenting transport for
+    // - auth DESIGN §4.3f: build the cert-presenting transport for
     // proxy-back calls from the same workload certificate minted above.
     let proxy_back_http = sentin8::auth::m2m::ensure_workload_certificate(
         &auth_issuer,
@@ -105,7 +105,7 @@ pub async fn build_state(
     .ok()
     .unwrap_or_else(|| {
         // Fail-soft dev fallback: a plain transport (targets reject it
-        // loudly) rather than aborting boot — the certificate mint can
+        // loudly) rather than aborting boot - the certificate mint can
         // succeed on the next restart once Acme is up.
         tracing::warn!("flow: proxy-back falling back to a plain transport (no identity)");
         sentin8::middleware::http_client::Sentin8HttpClient::new()
@@ -118,12 +118,12 @@ pub async fn build_state(
         func_client,
     });
 
-    // ── Sentin8:Policy (— shell-owned boot): consume the
-    // engine the shell booted in step 8 — no second engine, consumer, or
+    // ── Sentin8:Policy (- shell-owned boot): consume the
+    // engine the shell booted in step 8 - no second engine, consumer, or
     // DCR registration here.
     let policy_engine = core.admin.policy.clone();
 
-    // auth DESIGN §4.3f: the boot-loaded workload registry map — the
+    // auth DESIGN §4.3f: the boot-loaded workload registry map - the
     // authorization record for certificate-only platform-workload calls
     // (sys's delegation presents the `sys-flow` certificate; scopes ride
     // the map, not a token). Unavailable at boot → fail-closed until
@@ -135,7 +135,7 @@ pub async fn build_state(
     {
         Ok(map) => map,
         Err(e) => {
-            tracing::warn!(error = %e, "flow: workload registry map unavailable at boot — certificate-workload calls fail-closed until next boot");
+            tracing::warn!(error = %e, "flow: workload registry map unavailable at boot - certificate-workload calls fail-closed until next boot");
             sentin8::auth::workload_registry::WorkloadMap::boot_load_empty("sentin8:flow")
         }
     };
@@ -165,7 +165,7 @@ pub async fn build_state(
 /// Add this service's routes onto the shell-provided router. The shell
 /// owns the boot sequence, state binding, OpenAPI merge and the standard
 /// middleware stack; this adds ONLY routes (including the service's own
-/// `/v1/health` — custom payload).
+/// `/v1/health` - custom payload).
 /// Handle routes.
 pub fn routes(
     router: axum::Router<crate::handlers::AppState>,
@@ -196,8 +196,8 @@ pub fn routes(
             "/v1/internal/callbacks/async",
             post(handlers::internal_async_callback),
         )
-        // Traffic counter — counts every inbound request (excludes health checks).
-        // ── Sentin8:Policy admin API ( — shared implementation,
+        // Traffic counter - counts every inbound request (excludes health checks).
+        // ── Sentin8:Policy admin API ( - shared implementation,
         // one surface per service; handlers are generic over this AppState).
         .route(
             "/v1/admin/policy-sets",
@@ -243,7 +243,7 @@ pub fn routes(
         )
 }
 
-/// Shared policy-admin surface accessor — the shared
+/// Shared policy-admin surface accessor - the shared
 /// handlers extract this service's admin state via [`HasPolicyAdmin`].
 impl sentin8::shield::admin::HasPolicyAdmin for AppState {
     fn policy_admin(&self) -> &sentin8::shield::admin::SharedAdminState {

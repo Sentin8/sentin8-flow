@@ -31,8 +31,8 @@ pub enum WorkflowState {
     Cancelled,
 }
 
-/// WorkflowRecord — the persisted workflow state as returned by Sentin8:Flow.
-/// Mirrors the server's `flow.workflows` table (no `org_id` — RLS is
+/// WorkflowRecord - the persisted workflow state as returned by Sentin8:Flow.
+/// Mirrors the server's `flow.workflows` table (no `org_id` - RLS is
 /// `env_id`-scoped).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, ToSchema)]
 pub struct WorkflowRecord {

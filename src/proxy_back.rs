@@ -46,13 +46,13 @@ impl HandlerRegistry {
 
 /// Proxy-call the domain service's internal API to execute a domain step.
 ///
-/// — the bearer is the engine's M2M token source
+/// - the bearer is the engine's M2M token source
 /// (`sentin8-flow-sys`, scope `sentin8:sys:steps:execute`) when configured; the
 /// static profile `auth_token` is the dev-bootstrap fallback (scope-
 /// verifying targets reject it).
 /// Handle proxy back.
 /// Execute a proxy-back step call. auth DESIGN §4.3f: the
-/// `sentin8-flow-sys` CERTIFICATE is the identity — `http` IS the
+/// `sentin8-flow-sys` CERTIFICATE is the identity - `http` IS the
 /// cert-presenting mTLS transport (installed by `build_state` after
 /// the workload certificate is ensured); the target service's TLS layer
 /// authenticates the handshake. No bearer token exists on this path.

@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Func integration — call Func when a step's `resolve_func` needs WASM custom logic.
+//! Func integration - call Func when a step's `resolve_func` needs WASM custom logic.
 
 use sentin8_func_sdk::client::{CallbackConfig, ExecuteRequest, FuncClient};
 

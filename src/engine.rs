@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: Copyright Contributors to the Sentin8:Flow
 // SPDX-License-Identifier: Apache-2.0
 
-//! Step execution engine — sequential loop, state machine, branching.
+//! Step execution engine - sequential loop, state machine, branching.
 
 use sentin8_flow_sdk::contracts::WorkflowState;
 use uuid::Uuid;
@@ -17,7 +17,7 @@ use crate::types::{
 };
 
 /// Default deadline (seconds) for a `waiting` state without an explicit
-/// `scheduled_at` (flow DESIGN §6): the workflow cannot park forever —
+/// `scheduled_at` (flow DESIGN §6): the workflow cannot park forever -
 /// the due-index + Cron resume path expires it as Failed after this
 /// window.
 const DEFAULT_WAIT_DEADLINE_SECS: i64 = 7 * 24 * 3600;
@@ -28,7 +28,7 @@ pub struct Engine {
     pub pool: sqlx::PgPool,
     /// The CERT-PRESENTING http transport (, auth DESIGN
     /// §4.3f): presents the `sentin8-flow-proxy-back` workload certificate on
-    /// every call — proxy-back targets authenticate it at the TLS
+    /// every call - proxy-back targets authenticate it at the TLS
     /// handshake; no bearer token exists on this path.
     pub http: sentin8::middleware::http_client::Sentin8HttpClient,
     /// The registry.
@@ -104,13 +104,13 @@ impl Engine {
             // A pending jump overrides sequential order.
             if let Some(target) = jump_to.take() {
                 let Some(idx) = logic.steps.iter().position(|s| s.name == target) else {
-                    // Unknown branch target — fail the workflow.
+                    // Unknown branch target - fail the workflow.
                     error_msg = Some(format!("branch target not found: {target}"));
                     final_state = WorkflowState::Failed;
                     break;
                 };
                 if idx < i && idx < start_idx {
-                    // Jumping backwards before the resume point is allowed —
+                    // Jumping backwards before the resume point is allowed -
                     // the engine re-executes from that step.
                 }
                 i = idx;
@@ -144,7 +144,7 @@ impl Engine {
                 )
                 .await
             } else {
-                // Domain step — proxy-back.
+                // Domain step - proxy-back.
                 self.proxy_back_step(&sc, step, &record.callback_config)
                     .await
             };
@@ -202,7 +202,7 @@ impl Engine {
                     step_results.push(result);
                     // Deadline for undated waits (flow DESIGN §6): a wait
                     // without an explicit `scheduled_at` gets a default
-                    // deadline so the workflow cannot park forever — the
+                    // deadline so the workflow cannot park forever - the
                     // due-index + Cron resume path expires it as Failed.
                     scheduled_at = match sched {
                         Some(s) => Some(s),
