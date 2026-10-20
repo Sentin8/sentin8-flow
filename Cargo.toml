@@ -88,5 +88,5 @@ sentin8-m2m = { git = "https://github.com/Sentin8/sentin8-sdk", tag = "sdk-v0.6.
 sentin8-tls = { git = "https://github.com/Sentin8/sentin8-sdk", tag = "sdk-v0.6.7" }
 sentin8-flow-client = { path = "sdk/crates/flow-client" }
 sentin8-flow-contracts = { path = "sdk/crates/flow-contracts" }
-sentin8-func-sdk = { git = "https://github.com/Sentin8/sentin8-func", tag = "func-sdk-v0.6.5" }
+sentin8-func-sdk = { git = "https://github.com/Sentin8/sentin8-func", tag = "func-sdk-v0.6.6" }
 sentin8-flow-sdk = { path = "sdk/facade" }
