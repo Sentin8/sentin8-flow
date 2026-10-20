@@ -4133,7 +4133,7 @@ dependencies = [
 [[package]]
 name = "sentin8-func-client"
 version = "0.1.0"
-source = "git+https://github.com/Sentin8/sentin8-func?tag=func-sdk-v0.6.5#31b933fb0ad1f41b063608822bbc82893c9b09a3"
+source = "git+https://github.com/Sentin8/sentin8-func?tag=func-sdk-v0.6.6#d9b97b3e574ca721920b49c04237d9ea30789164"
 dependencies = [
  "reqwest 0.12.28",
  "sentin8-middleware",
@@ -4147,7 +4147,7 @@ dependencies = [
 [[package]]
 name = "sentin8-func-sdk"
 version = "0.1.0"
-source = "git+https://github.com/Sentin8/sentin8-func?tag=func-sdk-v0.6.5#31b933fb0ad1f41b063608822bbc82893c9b09a3"
+source = "git+https://github.com/Sentin8/sentin8-func?tag=func-sdk-v0.6.6#d9b97b3e574ca721920b49c04237d9ea30789164"
 dependencies = [
  "sentin8-func-client",
 ]
