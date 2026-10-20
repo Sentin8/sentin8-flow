@@ -749,6 +749,7 @@ pub async fn health() -> Json<LiveHealth> {
         service: Some("flow".to_string()),
         version: Some(sentin8::build_info::id()),
         build: Some(sentin8::build_info::build_hash().to_string()),
-        active_connections: sentin8::middleware::traffic_counter::process_active_connections().map(|n| n as i64),
+        active_connections: sentin8::middleware::traffic_counter::process_active_connections()
+            .map(|n| n as i64),
     })
 }

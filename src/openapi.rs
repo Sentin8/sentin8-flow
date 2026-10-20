@@ -66,4 +66,5 @@ use crate::types;
         (name = "policy", description = "Shield policy administration (shared surface)"),
         (name = "flow", description = "Sentin8:Flow admin API - workflow CRUD, retry, repair, resume"),
     ),
-)]pub struct FlowOpenApi;
+)]
+pub struct FlowOpenApi;
