@@ -134,14 +134,14 @@ async fn registry_resolves_by_domain() {
 
     reg.register(StepHandlerProfile {
         domain: "payments".into(),
-        base_url: "https://payments.ops.sys.sentin8.local".into(),
+        base_url: "https://payments.ops.sys.local.sentin8.dev".into(),
         auth_token: "tok".into(),
         internal_path: "/v1/internal/steps".into(),
     })
     .await;
 
     let p = reg.resolve("payments").await.expect("profile");
-    assert_eq!(p.base_url, "https://payments.ops.sys.sentin8.local");
+    assert_eq!(p.base_url, "https://payments.ops.sys.local.sentin8.dev");
     assert_eq!(p.internal_path, "/v1/internal/steps");
     assert!(reg.resolve("ledger").await.is_none());
 }
@@ -336,14 +336,14 @@ fn proxy_back_response_maps_to_step_result() {
 fn proxy_back_url_assembly() {
     let profile = StepHandlerProfile {
         domain: "payments".into(),
-        base_url: "https://payments.ops.sys.sentin8.local".into(),
+        base_url: "https://payments.ops.sys.local.sentin8.dev".into(),
         auth_token: "tok".into(),
         internal_path: "/v1/internal/steps".into(),
     };
     let url = format!("{}{}/execute", profile.base_url, profile.internal_path);
     assert_eq!(
         url,
-        "https://payments.ops.sys.sentin8.local/v1/internal/steps/execute"
+        "https://payments.ops.sys.local.sentin8.dev/v1/internal/steps/execute"
     );
 }
 
@@ -404,7 +404,7 @@ fn callback_config_host_functions_roundtrip() {
         "payments_get_instruction".to_string(),
     );
     let cb = CallbackConfig {
-        base_url: "https://payments.ops.sys.sentin8.local".into(),
+        base_url: "https://payments.ops.sys.local.sentin8.dev".into(),
         auth_token: "tok".into(),
         internal_path: "/v1/internal/steps".into(),
         host_functions: hf,
