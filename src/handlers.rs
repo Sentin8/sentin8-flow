@@ -39,7 +39,7 @@ pub struct AppState {
     pub engine: Arc<Engine>,
     /// The registry.
     pub registry: HandlerRegistry,
-    /// Shield engine ( - ): additional gate after scope.
+    /// Shield engine : additional gate after scope.
     /// The policy.
     pub policy: Arc<crate::policy::Engine>,
     /// auth DESIGN §4.3f: the boot-loaded workload registry map - the
@@ -573,7 +573,7 @@ pub async fn register_handler(
 /// `POST /v1/internal/schedules/run` - Cron calls this to resume due scheduled workflows.
 /// Handle internal schedule run.
 
-// ── Typed proxy-back replies (OAPEC-9) ──────────────────────────────────
+// ── Typed proxy-back replies ──────────────────────────────────
 
 /// The `POST /v1/internal/schedules/run` reply.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]

@@ -113,7 +113,7 @@ pub async fn verify_cert_or_token(
             workload: workload.to_string(),
             scopes: rec.scopes.clone(),
             vertical: Some(rec.vertical),
-            // VDC-4: the service_type claim rides the identity so Sys's
+            // the service_type claim rides the identity so Sys's
             // tenant-snapshot scoped discovery keys on it.
             service_type: Some(rec.service_type.clone()),
             thumbprint: headers
