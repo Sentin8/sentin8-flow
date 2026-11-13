@@ -4136,7 +4136,7 @@ dependencies = [
 
 [[package]]
 name = "sentin8-flow"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "axum",
@@ -4164,7 +4164,7 @@ dependencies = [
 
 [[package]]
 name = "sentin8-flow-client"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "reqwest 0.12.28",
  "sentin8-flow-contracts",
@@ -4181,7 +4181,7 @@ dependencies = [
 
 [[package]]
 name = "sentin8-flow-contracts"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "chrono",
  "serde",
@@ -4192,7 +4192,7 @@ dependencies = [
 
 [[package]]
 name = "sentin8-flow-sdk"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "sentin8-flow-client",
  "sentin8-flow-contracts",
