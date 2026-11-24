@@ -138,6 +138,7 @@ pub fn print(section: Option<String>) -> anyhow::Result<()> {
         service_type: "sentin8:flow",
         subdomain: "flow",
         health_path: "/v1/health",
+        exposure: "",
         admin_scopes: &[
             // Granular vocabulary (flow design): handlers gate
             // reads on `sentin8:flow:read` and writes on `sentin8:flow:write`.
