@@ -8,7 +8,8 @@
       "telemetry_property": {
         "slug": "flow",
         "name": "Sentin8:Flow Platform Telemetry"
-      }
+      },
+      "exposure": "internal"
     }
   ]
 }
